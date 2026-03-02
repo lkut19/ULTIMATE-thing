@@ -1,0 +1,27 @@
+subjects = [
+    {"id": 1, "name": "Mathematics", "difficulty": 3},
+    {"id": 2, "name": "Further Mathematics", "difficulty": 3},
+    {"id": 3, "name": "physics", "difficulty": 3},
+    {"id": 4, "name": "Chemistry", "difficulty": 3},
+    {"id": 5, "name": "Biology", "difficulty": 3},
+    {"id": 6, "name": "Economics", "difficulty": 2},
+    {"id": 7, "name": "computer Science", "difficulty": 2},
+    {"id": 8, "name": "Geography", "difficulty": 2},
+    {"id": 9, "name": "History", "difficulty": 3},
+    {"id": 10, "name": "psycology", "difficulty": 1},
+    {"id": 11, "name": "English Literature", "difficulty": 3},
+    {"id": 12, "name": "Politics", "difficulty": 2},
+    {"id": 13, "name": "Sociology", "difficulty": 1},
+    {"id": 14, "name": "Media Studies", "difficulty": 1},
+    {"id": 15, "name": "Business Studies", "difficulty": 1},
+    {"id": 16, "name": "Art & Design", "difficulty": 2},
+    {"id": 17, "name": "music", "difficulty": 2},
+    {"id": 18, "name": "Applied Science", "difficulty": 2},
+    {"id": 19, "name": "Business", "difficulty": 1},
+    {"id": 20, "name": "Information Technology", "difficulty": 1},
+    {"id": 21, "name": "Engineering", "difficulty": 2},
+    {"id": 22, "name": "Health & Social Care", "difficulty": 1},
+    {"id": 23, "name": "Sport", "difficulty": 1},
+    {"id": 24, "name": "Creative Media", "difficulty": 1}
+]
+

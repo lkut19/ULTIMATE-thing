@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1>Add subjects</h1>
+    <form action="/subjects" method="post">
+        <div id="dropdownholder">
+            <div class="selectsubject">
+                <select name="subject" required>
+                    {% for item in sublist %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+                </select>
+                <select name="grade" required>
+                    {% for item in gradelist %}
+                        <option value="{{ item.val }}">{{ item.grade }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    <br>
+    <button type="button" onclick="add()">+</button>
+    <br><br>
+    <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        function add() {
+            const container = document.getElementById("dropdownholder");
+            const origonal = container.querySelector(".selectsubject");
+            const cheeseburger = origonal.cloneNode(true);
+            container.appendChild(cheeseburger);
+        }
+    </script>
+</body>
+</html>

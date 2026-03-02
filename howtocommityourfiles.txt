@@ -1,0 +1,4 @@
+use:
+git add .
+git commit -m "leave a message"
+git push

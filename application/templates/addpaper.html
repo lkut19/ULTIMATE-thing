@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1>Add a past paper</h1>
+    <form action="/addpaper" method="post">
+        <select name="subject" required>
+            {% for item in sublist %}
+                <option value="{{ item.id }}">{{ item.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="grade" required>
+            {% for item in gradelist %}
+                <option value="{{ item.val }}">{{ item.grade }}</option>
+            {% endfor %}
+        </select>
+        <input type="date" name="date" max="{{ maxdate }}" required> <br><br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

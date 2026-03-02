@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1>Statistics</h1>
+        <table>
+            <tr>
+                <th>Subject</th>
+                <th>length</th>
+                <th>grade</th>
+            </tr>
+            {% for item in data %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.times }}</td>
+                <td>{{ item.grade }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </br>
+    <p1>Style: {{ style }}</p1>
+</body>
+</html>

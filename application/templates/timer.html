@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1>Timer Page</h1>
+    <p style="font-size: 100px;" id="time">click start</p>
+    <br>
+    <button onclick="start()" id="start">Start</button>
+    <button onclick="stpo()" id="stop">Stop</button>
+    <button onclick="reset()" id="reset">reset</button>
+    <br><br>
+revising subject: 
+    <form action="/timer" method="post" id="timersubject" onsubmit="gettime()">
+        <div id="dropdownholder">
+            <div class="selectsubject">
+                <select name="subject" required>
+                    {% for item in sublist %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    <br><br>
+    <input type="hidden" name="seconds" id="secondsreturn">
+    <button type="submit">Submit</button>
+    </form>
+
+    
+<script>
+let intervalId;
+let store = 0;
+let startt;
+let timer = document.getElementById("time");
+function start() {
+        if (intervalId) {
+            return;
+        }
+        startt = Date.now();
+        intervalId = setInterval(() => {
+            let now = Date.now();
+            let dif = (now - startt); <!-- This is a comment -->
+            let hours = Math.floor((dif+store) / 3600000);
+            let minutes = Math.floor(((dif+store) % 3600000) / 60000);
+            let seconds = Math.floor(((dif+store) % 60000) / 1000);
+            if (minutes < 10) minutes = "0" + minutes;
+            if (seconds < 10) seconds = "0" + seconds;
+            if (hours < 10) hours = "0" + hours;
+            timer.textContent = hours + ":" + minutes + ":" + seconds;
+            } , 1)
+}
+
+function stpo() {
+    if (intervalId == null) {
+        return;
+    }
+    store = store + ((Date.now() - startt));
+    clearInterval(intervalId);
+    intervalId = null;
+}
+
+function reset() {
+    store = 0;
+    clearInterval(intervalId);
+    intervalId = null;
+    document.getElementById("time").textContent = "00:00:00";
+}   
+
+function gettime() {
+    displayed = document.getElementById("time").textContent;
+    seconds = parseInt(displayed.substring(0,2)*3600) + parseInt(displayed.substring(3,5)*60) + parseInt(displayed.substring(6,8));
+    document.getElementById("secondsreturn").value = seconds;
+}
+
+</script>
+</body>
+</html> 

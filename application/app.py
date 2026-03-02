@@ -287,25 +287,33 @@ def addpaper():
 
 @app.route("/nextsession")
 def nextsession():
-    import subjects as dictsubjects
+
     for item in grades.query.filter_by(UID=session["UID"]).all():
         if item.UID == session["UID"]:
             grade = int(item.grade)
-            if grade == 6:
-                hours = (13 + dictsubjects.subjects[int(item["SID"])-1]["difficulty"]) * 3600
-            elif grade == 5:
-                hours = (10 + dictsubjects.subjects[int(item["SID"])-1]["difficulty"]) * 3600
-            elif grade == 4:
-                hours = (7 + dictsubjects.subjects[int(item["SID"])-1]["difficulty"]) * 3600
-            elif grade == 3:
-                hours = (4 + dictsubjects.subjects[int(item["SID"])-1]["difficulty"]) * 3600
-            elif grade == 2:
-                hours = (2 + dictsubjects.subjects[int(item["SID"])-1]["difficulty"]) * 3600
-            elif grade == 1:
-                hours = (1 + dictsubjects.subjects[int(item["SID"])-1]["difficulty"]) * 3600
-            else:
-                hours = 0
+            itemSID=int(item.SID)
+            calculatetime(grade,itemSID)
     return render_template("nextsession.html")
+
+def calculatetime(grade,itemsid):
+    print(f"Calculating time for grade {grade} and subject ID {itemsid}")
+    import subjects as dictsubjects
+    if grade == 6:
+        hours = (13 + dictsubjects.subjects[itemsid-1]["difficulty"]) * 3600
+    elif grade == 5:
+        hours = (10 + dictsubjects.subjects[itemsid-1]["difficulty"]) * 3600
+    elif grade == 4:
+        hours = (7 + dictsubjects.subjects[itemsid-1]["difficulty"]) * 3600
+    elif grade == 3:
+        hours = (4 + dictsubjects.subjects[itemsid-1]["difficulty"]) * 3600
+    elif grade == 2:
+        hours = (2 + dictsubjects.subjects[itemsid-1]["difficulty"]) * 3600
+    elif grade == 1:
+        hours = (1 + dictsubjects.subjects[itemsid-1]["difficulty"]) * 3600
+    else:
+        hours = 0
+    return hours
+
 
 def format(seconds):
     hour = seconds // 3600

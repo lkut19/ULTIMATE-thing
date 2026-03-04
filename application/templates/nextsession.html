@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1>Your revision progress</h1>
+        <table>
+            <tr>
+                <th>Subject</th>
+                <th>Grade</th>
+                <th>Target</th>
+                <th>Time needed</th>
+                <th>Number of sessions needed</th>
+            </tr>
+            {% for item in data %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.grade }}</td>
+                <td>{{ item.target }}</td>
+                <td>{{ item.timeneeded }}</td>
+                <td>{{ item.numsessions }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </br>
+    <h2>you should focus on: {{ worstsubject }}</h2>
+</body>
+</html>

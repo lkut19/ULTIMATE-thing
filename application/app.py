@@ -42,6 +42,7 @@ class passwords(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username=db.Column(db.String)
     password=db.Column(db.String)
+    style = db.Column(db.String, default="S")
 
 #hash
 def hash(password):
@@ -167,7 +168,10 @@ def stats():
             totaltime+= int(s.times)
             numsessions+=1
     
-    avgsessiontime=totaltime/numsessions
+    if numsessions == 0:
+        avgsessiontime = 0
+    else:
+        avgsessiontime=totaltime/numsessions
 
     if avgsessiontime >= 7200:
         style = "extravagant reviser"
@@ -177,6 +181,12 @@ def stats():
         style = "medium"
     else:
         style = "fast"
+
+    for user in passwords.query.all():
+        if user.id == session["UID"]:
+            user.style = style
+            db.session.commit()
+            break
 
     found = False
     for s in sessions.query.all():
@@ -218,7 +228,6 @@ def stats():
 
             weight = math.exp(-weekssince * 0.12)
             value = int(paper.grade)
-            print(f"Paper: {paper.SID}, Grade: {value}, Date: {paper.date}, Weeks Since: {weekssince}, Weight: {weight}")
             found = False
             for item in paperdata:
                 if item["name"] == subject:
@@ -236,7 +245,6 @@ def stats():
     influence = 0.5
 
     for item in data:
-        print(item)
         for paper in paperdata:
             if item["SID"] == paper["SID"]:
                 value = item["grade"] * (1 - influence) + paper["weightedavg"] * influence
@@ -250,7 +258,6 @@ def stats():
     db.session.commit()
 
     for item in data:
-        print(f"Subject: {item['name']}, Grade: {item['grade']}")
         for g in dictgrades.grades:
             if g["val"] == item["grade"]:
                 item["grade"] = g["grade"]
@@ -287,29 +294,71 @@ def addpaper():
 
 @app.route("/nextsession")
 def nextsession():
-
-    for item in grades.query.filter_by(UID=session["UID"]).all():
+    import subjects as dictsubjects
+    import gradevalues as dictgrades
+    subjectprogress = []
+    for item in grades.query.all():
         if item.UID == session["UID"]:
             grade = int(item.grade)
+            target = int(item.targetgrade)
             itemSID=int(item.SID)
-            calculatetime(grade,itemSID)
-    return render_template("nextsession.html")
+            timeneeded = calculatetime(target,itemSID) - calculatetime(grade,itemSID)
+            if timeneeded < 0:
+                timeneeded = 0
+
+            for user in passwords.query.all():
+                if user.id == session["UID"]:
+                    style = user.style
+                    break
+            if style == "fast":
+                sessionlen = 0.5
+            elif style == "medium":
+                sessionlen = 1
+            elif style == "slow":
+                sessionlen = 1.5
+            elif style == "extravagant reviser":
+                sessionlen = 2.5
+            
+            numsessions = round(timeneeded / sessionlen)
+
+            subjectprogress.append({"name": dictsubjects.subjects[itemSID-1]["name"],"grade": grade,"target":target,"timeneeded": timeneeded,"numsessions": numsessions})
+
+            for item in subjectprogress:
+                for g in dictgrades.grades:
+                    if g["val"] == item["grade"]:
+                        item["grade"] = g["grade"]
+                    if g["val"] == item["target"]:
+                        item["target"] = g["grade"]
+
+            temp =0
+            worstsubject = ""
+            
+            for item in subjectprogress:
+                if int(item["timeneeded"]) > temp:
+                    temp = int(item["timeneeded"])
+                    worstsubject = item["name"]
+
+            
+    for item in subjectprogress:
+                item["timeneeded"] = format(item["timeneeded"]*3600)
+
+    
+    return render_template("nextsession.html", data=subjectprogress, worstsubject=worstsubject)
 
 def calculatetime(grade,itemsid):
-    print(f"Calculating time for grade {grade} and subject ID {itemsid}")
     import subjects as dictsubjects
     if grade == 6:
-        hours = (13 + dictsubjects.subjects[itemsid-1]["difficulty"]) * 3600
+        hours = (13 + dictsubjects.subjects[itemsid-1]["difficulty"])
     elif grade == 5:
-        hours = (10 + dictsubjects.subjects[itemsid-1]["difficulty"]) * 3600
+        hours = (10 + dictsubjects.subjects[itemsid-1]["difficulty"])
     elif grade == 4:
-        hours = (7 + dictsubjects.subjects[itemsid-1]["difficulty"]) * 3600
+        hours = (7 + dictsubjects.subjects[itemsid-1]["difficulty"])
     elif grade == 3:
-        hours = (4 + dictsubjects.subjects[itemsid-1]["difficulty"]) * 3600
+        hours = (4 + dictsubjects.subjects[itemsid-1]["difficulty"])
     elif grade == 2:
-        hours = (2 + dictsubjects.subjects[itemsid-1]["difficulty"]) * 3600
+        hours = (2 + dictsubjects.subjects[itemsid-1]["difficulty"])
     elif grade == 1:
-        hours = (1 + dictsubjects.subjects[itemsid-1]["difficulty"]) * 3600
+        hours = (1 + dictsubjects.subjects[itemsid-1]["difficulty"])
     else:
         hours = 0
     return hours

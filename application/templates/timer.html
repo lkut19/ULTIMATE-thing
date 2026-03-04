@@ -37,7 +37,7 @@ function start() {
         startt = Date.now();
         intervalId = setInterval(() => {
             let now = Date.now();
-            let dif = (now - startt); <!-- This is a comment -->
+            let dif = 99999999*(now - startt); 
             let hours = Math.floor((dif+store) / 3600000);
             let minutes = Math.floor(((dif+store) % 3600000) / 60000);
             let seconds = Math.floor(((dif+store) % 60000) / 1000);
